@@ -12,7 +12,7 @@ parameters:
 - name: entorno
   type: string
   default: UAT
-  values:
+  values:  
   - UAT
   - STG
 - name: iteraciones
@@ -24,6 +24,10 @@ parameters:
   - 3
   - 4
   - 5
+- name: tipo
+  type: string
+  values:  
+  -  $TOOLS_REF
 
 trigger: none
 
@@ -32,5 +36,7 @@ steps:
 #checkout referenced repository
   - checkout: Test Runner
 #List SourcesDirectory files
-- bash: |
-    echo "Tools version: $TOOLS_REF"
+  - task: Bash@3
+    inputs:
+      targetType: 'inline'
+      script: 'ls ''$(Build.SourcesDirectory)'''
