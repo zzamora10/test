@@ -1,7 +1,7 @@
 parameters: 
-  name: num_ejecucion
-  type: string
-  ${{ if contains(parameters.it, 'Full') }}:
+  - name: num_ejecucion
+    type: string
+    ${{ if contains(parameters.it, 'Full') }}:
     values: ""
 
 steps:
