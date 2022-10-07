@@ -2,15 +2,15 @@ steps:
 - task: CmdLine@2
   displayName: 'Install Newman'
   inputs:
-    script: 'sudo npm install -g newman'
+    script: 'npm install -g newman'
 
 - task: CmdLine@2
   displayName: 'Install Newman-Reporter-htmlextra'
   inputs:
-    script: 'sudo npm install -g newman-reporter-htmlextra'
+    script: 'npm install -g newman-reporter-htmlextra'
 
 - task: CmdLine@2
-  displayName: 'Test CMP'
+  displayName: 'Run CMP_por_el_comercioMarca-TC/TD'
   continueOnError: true
   inputs:
     script: 'newman run CMP/CMP_v1.postman_collection.json -d CMP/TD_DATAFORMAT_CMP_UAT_STG.csv 
@@ -18,17 +18,17 @@ steps:
                                                            --reporters cli,junit,htmlextra 
                                                            --reporter-junit-export Results/junitReport.xml 
                                                            --reporter-htmlextra-export ./Results/index.html
-                                                           -n ${{ parameters.iteraciones }}'
+                                                           -n ${{ parameters.it }}'
     workingDirectory: '$(System.DefaultWorkingDirectory)/'
 
 - task: PublishTestResults@2
   inputs:
     testResultsFormat: 'JUnit'
     testResultsFiles: 'Results/*.xml'
-    testRunTitle: 'Test CMP'
+    testRunTitle: 'Reportes JUnit'
 
 - task: UploadPostmanHtmlReport@1
   displayName: 'Upload Postman Html Report'
   inputs:
     cwd: '$(System.DefaultWorkingDirectory)/Results'
-    tabName: 'Test CPM'
+    tabName: 'Reportes Newman'
