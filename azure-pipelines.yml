@@ -3,7 +3,7 @@ resources:
   - repository: Test1
     type: git
     name: GiruBack/Test1
-    ref: master
+    ref: main
 
 parameters:
 - name: entorno
