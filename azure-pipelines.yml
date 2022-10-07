@@ -16,11 +16,21 @@ parameters:
             - 3 
             - 4 
             - 5
+    - name: data
+      type: string
+      default: CU
+      values:
+            - CU 
+            - TC 
+            - TD
 
 pool:
   vmImage: ubuntu-latest
 
 jobs:
+    parameters:
+      it: ${{ parameters.iteraciones }}
+      dat: ${{ parameters.data }}
     - ${{ if contains(parameters.entorno, 'UAT') }}:
       - job: Ejecucion_en_UAT
         steps:
@@ -36,3 +46,11 @@ jobs:
               parameters:
                 it: ${{ parameters.iteraciones }}
             - script: echo step two
+
+
+
+
+
+
+
+
