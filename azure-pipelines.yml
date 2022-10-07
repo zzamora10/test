@@ -23,13 +23,47 @@ parameters:
             - CU 
             - TC 
             - TD
-    - name: mypool
+    - name: tipologia
       displayName: 'Tipologia'
-      type: enum
+      type: string
       values:
-      - ubuntu-latest
-      - windows-latest
-      - macos-latest
+            - Afiliación / desafiliación débito automático
+            - Anulación de tarjeta de crédito
+            - Atención por Prenvención y Fraudes
+            - Baja de Tasa
+            - Cancelación de Cuenta
+            - Cobros Indebidos
+            - Constancia de no adeudo
+            - Consumos mal procesados por el comercio/marca
+            - Consumos no reconocidos por fraude
+            - Cuenta/Cancelación no reconocida
+            - Desacuerdo de Condiciones/Tasas/Tarifas
+            - Devolucion de saldo acreedor
+            - Duplicado de documento
+            - Duplicado de Estado de Cuenta/Servicio de Copias
+            - Duplicado de voucher
+            - Emisión de Tarjeta
+            - Exoneración de Cobros
+            - Finalización de tarjeta de crédito
+            - Incorrecta aplicación CD/EC/C. cuotas
+            - Informacion de movimientos
+            - Insuficiente información
+            - Liberacion de retenciones
+            - Liberación de Retenciones Judiciales
+            - Modificación de grupo de liquidación
+            - Modificación Línea TC Adicional
+            - Modificacion Plazo
+            - No recepción de documento
+            - Operación Denegada
+            - Pago Anticipado y Adelanto de Cuotas
+            - Programa de Recompensas
+            - Reducción de Línea TC
+            - Regrabación de plástico
+            - Reporte indebido Centrales de Riesgo
+            - Sistema de Recompensas
+            - Solicitud de anulación de seguro
+            - Transacción mal o no procesada
+            - Traslado de saldo acreedor
 
 
 
