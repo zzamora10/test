@@ -1,6 +1,6 @@
 resources:
   repositories:
-  - repository: Test Runner/CPM
+  - repository: Test Runner
     type: git
     name: GiruBack/Test Runner
     ref: main
@@ -31,7 +31,7 @@ trigger: none
 
 steps:
 #checkout referenced repository
-  - checkout: Test Runner
+  - checkout: Test Runner/CPM
 #List SourcesDirectory files
   - task: Bash@3
     inputs:
