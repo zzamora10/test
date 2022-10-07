@@ -1,5 +1,5 @@
    - ${{ if eq(parameters.it, 'Full') }}:
-      num_ejecucion: |''
+      num_ejecucion: " "
     - ${{ if ne(parameters.it, 'Full') }}:
       num_ejecucion: ${{ parameters.it }}
 
