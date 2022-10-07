@@ -47,7 +47,6 @@ jobs:
   steps: 'sudo npm install -g newman-reporter-htmlextra'
 
 
-jobs:
 - ${{ if contains(parameters.entornos, 'UAT') }}:
   - job: Ruta 1
     steps:
