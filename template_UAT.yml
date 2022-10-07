@@ -1,7 +1,6 @@
 steps:
 - ${{ if contains(parameters.it, 'Full') }}:
-  - script: |
-      echo "triggerrrrrrrrrrrrrr"
+  num_it: n -1
 
 - task: CmdLine@2
   displayName: 'Install Newman-Reporter-htmlextra'
@@ -17,7 +16,7 @@ steps:
                                                            --reporters cli,junit,htmlextra 
                                                            --reporter-junit-export Results/junitReport.xml 
                                                            --reporter-htmlextra-export ./Results/index.html
-                                                           ${{ parameters.num_ejecucion }}'
+                                                           $(num_it)'
     workingDirectory: '$(System.DefaultWorkingDirectory)/'
 
 - task: PublishTestResults@2
