@@ -1,8 +1,8 @@
 resources:
   repositories:
-  - repository: Test1
+  - repository: Test Runner
     type: git
-    name: GiruBack/Test1
+    name: GiruBack/Test Runner
     ref: main
 
 parameters:
@@ -27,7 +27,7 @@ trigger: none
 
 steps:
 #checkout referenced repository
-  - checkout: Test1
+  - checkout: Test Runner
 #List SourcesDirectory files
   - task: Bash@3
     inputs:
