@@ -13,7 +13,7 @@ steps:
                                                            --reporters cli,junit,htmlextra 
                                                            --reporter-junit-export Results/junitReport.xml 
                                                            --reporter-htmlextra-export ./Results/index.html
-                                                           -n ${{ parameters.iteraciones }}'
+                                                           -n ${{ parameters.it }}'
     workingDirectory: '$(System.DefaultWorkingDirectory)/'
 
 - task: PublishTestResults@2
