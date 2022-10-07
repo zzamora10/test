@@ -25,11 +25,12 @@ parameters:
             - TD
 
 
-pool:
-  vmImage: ubuntu-latest
+
 
 jobs:
       - job: Ejecucion_en_${{ parameters.entorno }}
+        pool:
+            vmImage: ubuntu-latest
         steps:
             - template: template_${{ parameters.entorno }}.yml 
               parameters:
