@@ -29,23 +29,14 @@ pool:
   vmImage: ubuntu-latest
 
 jobs:
-    - ${{ if contains(parameters.entorno, 'UAT') }}:
-      - job: Ejecucion_en_UAT
+      - job: Ejecucion_en_${{ parameters.entorno }}
         steps:
-            - template: templateUat.yml 
+            - template: template_${{ parameters.entorno }}.yml 
               parameters:
                 it: ${{ parameters.iteraciones }}
                 dat: ${{ parameters.data }}
             - script: echo step one 
-            
-    - ${{ if contains(parameters.entorno, 'STG') }}:
-      - job: Ejecucion_en_STG
-        steps:
-            - template: templateStg.yml 
-              parameters:
-                it: ${{ parameters.iteraciones }}
-                dat: ${{ parameters.data }}
-            - script: echo step two
+
 
 
 
