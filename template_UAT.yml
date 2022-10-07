@@ -2,7 +2,7 @@ parameters:
   - name: num_ejecucion
     type: string
     ${{ if contains(parameters.it, 'Full') }}:
-    value: hola
+    value: -n 1
 
 
 steps:
@@ -20,7 +20,7 @@ steps:
                                                            --reporters cli,junit,htmlextra 
                                                            --reporter-junit-export Results/junitReport.xml 
                                                            --reporter-htmlextra-export ./Results/index.html
-                                                           -n ${{ parameters.num_ejecucion }}'
+                                                           ${{ parameters.num_ejecucion }}'
     workingDirectory: '$(System.DefaultWorkingDirectory)/'
 
 - task: PublishTestResults@2
