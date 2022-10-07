@@ -1,0 +1,1199 @@
+{
+	"info": {
+		"_postman_id": "58bd711c-ac3b-4173-8b0b-901b0e5aab4c",
+		"name": "CMP_por_el_comercioMarca-TC/TD",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "23485764"
+	},
+	"item": [
+		{
+			"name": "Login GIRU",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);\r",
+							"pm.environment.set(\"nps_oauth_token\", jsonData.access_token);\r",
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"USUARIO \"+jsonData.userinfo.username+\": \"+ jsonData.userinfo.name, function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"ROL \"+jsonData.userinfo.profileCode+\": \"+ jsonData.userinfo.profileName, function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Area \"+jsonData.userinfo.areaCode+\": \"+ jsonData.userinfo.areaDescription, function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.environment.set(\"profileName\", jsonData.userinfo.profileName\r",
+							");"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"console.log(pm.environment.name);\r",
+							"if(pm.environment.name.includes(\"STG\")){\r",
+							"var CreadorReclamo='xt8345';\r",
+							"pm.environment.set(\"CreadorReclamo\", JSON.stringify(CreadorReclamo));\r",
+							"}\r",
+							"else if(pm.environment.name.includes(\"UAT\")){\r",
+							"var CreadorReclamo='XT9928';\r",
+							"pm.environment.set(\"CreadorReclamo\", JSON.stringify(CreadorReclamo));\r",
+							"}\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json"
+					},
+					{
+						"key": "Authorization",
+						"value": "Basic {{nps_auth_front}}"
+					},
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					},
+					{
+						"key": "Ocp-Apim-Subscription-Key",
+						"type": "text",
+						"value": "{{nps_security_subscription_key}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"username\":{{CreadorReclamo}},\n\t\"password\":\"Arabella1201*\"\n}"
+				},
+				"url": {
+					"raw": "{{url_security_nps}}/login",
+					"host": [
+						"{{url_security_nps}}"
+					],
+					"path": [
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Event",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"var jsonData=JSON.parse(responseBody);\r",
+							"pm.environment.set(\"nps_event_id_gen\",jsonData.id);\r",
+							"pm.environment.set(\"CodigoUnico\",jsonData.customer.id);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{nps_oauth_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Ocp-Apim-Subscription-Key",
+						"value": "{{nps_giru_subscription_key}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{url_common_nps}}{{version}}/events?identityDocumentType={{TipoDocumento}}&identityDocumentNumber={{NumDocumento}}",
+					"host": [
+						"{{url_common_nps}}{{version}}"
+					],
+					"path": [
+						"events"
+					],
+					"query": [
+						{
+							"key": "identityDocumentType",
+							"value": "{{TipoDocumento}}"
+						},
+						{
+							"key": "identityDocumentNumber",
+							"value": "{{NumDocumento}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get accounts",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);\r",
+							"console.log(\"json=\"+jsonData);\r",
+							"console.log(\"accounts\"+jsonData.accounts)\r",
+							"if (jsonData.accounts!= null) {\r",
+							"    var moneda = jsonData.accounts[0].currency\r",
+							"    console.log(moneda)\r",
+							"    if (moneda == \"PEN\") {\r",
+							"        moneda = \"Soles\"\r",
+							"    } else {\r",
+							"        moneda = \"Dolares\"\r",
+							"    }\r",
+							"    pm.environment.set(\"numCuenta\", jsonData.accounts[0].id);\r",
+							"    pm.environment.set(\"subTipoCuenta\", jsonData.accounts[0].subType);\r",
+							"    pm.environment.set(\"tipoCuenta\", jsonData.accounts[0].joint.type);\r",
+							"    pm.environment.set(\"estadoCuenta\", jsonData.accounts[0].status);\r",
+							"    pm.environment.set(\"monedaCuenta\", moneda);\r",
+							"\r",
+							"    pm.test(\"Status code is 200\", function() {\r",
+							"        pm.response.to.have.status(200);\r",
+							"    });\r",
+							"} else {\r",
+							"    pm.test(\"El Cliente no tiene Cuentas asociadas\", function() {\r",
+							"        pm.response.to.have.status(200);\r",
+							"    });\r",
+							"    //postman.setNextRequest(null);\r",
+							"}"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{nps_oauth_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Ocp-Apim-Subscription-Key",
+						"value": "{{nps_giru_subscription_key}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{url_common_nps}}/{{version}}/accounts?identityDocumentType={{TipoDocumento}}&identityDocumentNumber={{NumDocumento}}",
+					"host": [
+						"{{url_common_nps}}"
+					],
+					"path": [
+						"{{version}}",
+						"accounts"
+					],
+					"query": [
+						{
+							"key": "identityDocumentType",
+							"value": "{{TipoDocumento}}"
+						},
+						{
+							"key": "identityDocumentNumber",
+							"value": "{{NumDocumento}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get credit card",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);\r",
+							"if (jsonData.accounts[0] != null) {\r",
+							"    var moneda = jsonData.accounts[1].currency\r",
+							"    if (moneda == \"PEN\") {\r",
+							"        moneda = \"Soles\"\r",
+							"    } else {\r",
+							"        moneda = \"Dolares\"\r",
+							"    }\r",
+							"    pm.environment.set(\"CardMoneda\", moneda)\r",
+							"    pm.environment.set(\"cardNumberTC\", jsonData.accounts[1].cards[0].cardNumber)\r",
+							"    pm.environment.set(\"situation\", jsonData.accounts[1].cards[0].situation)\r",
+							"    pm.environment.set(\"status\", jsonData.accounts[1].cards[0].status)\r",
+							"    pm.environment.set(\"accountNumber\", parseInt(jsonData.accounts[1].accountNumber))\r",
+							"    pm.environment.set(\"mark\", jsonData.accounts[1].cards[0].mark)\r",
+							"    pm.environment.set(\"markCode\", jsonData.accounts[1].cards[0].markCode)\r",
+							"    pm.environment.set(\"type\", jsonData.accounts[1].cards[0].type)\r",
+							"    pm.environment.set(\"typeCode\", jsonData.accounts[1].cards[0].typeCode)\r",
+							"\r",
+							"    pm.test(\"Status code is 200\", function() {\r",
+							"        pm.response.to.have.status(200);\r",
+							"    });\r",
+							"} else {\r",
+							"    pm.test(\"El Cliente no tiene Tarjetas de Credito asociadas\", function() {\r",
+							"        pm.response.to.have.status(200);\r",
+							"    });\r",
+							"    postman.setNextRequest(\"get debit card\");\r",
+							"}"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{nps_oauth_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Ocp-Apim-Subscription-Key",
+						"value": "{{nps_giru_subscription_key}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{url_common_nps}}{{version}}/cards/{{CodigoUnico}}/credit-cards/new",
+					"host": [
+						"{{url_common_nps}}{{version}}"
+					],
+					"path": [
+						"cards",
+						"{{CodigoUnico}}",
+						"credit-cards",
+						"new"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get debit card",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonData=JSON.parse(responseBody);\r",
+							"if (jsonData.debitCard != null) {\r",
+							"pm.environment.set(\"cardNumberTD\",jsonData.debitCard.cardNumber);\r",
+							"pm.environment.set(\"situationCode\",jsonData.debitCard.situationCode);\r",
+							"pm.environment.set(\"situationDescription\",jsonData.debitCard.situationDescription);\r",
+							"\r",
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"}else {\r",
+							"    pm.test(\"El Cliente no tiene Tarjetas de Debito asociadas\", function() {\r",
+							"        pm.response.to.have.status(200);\r",
+							"    });\r",
+							"    postman.setNextRequest(\"Generar Reclamo\");\r",
+							"}"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{nps_oauth_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Ocp-Apim-Subscription-Key",
+						"value": "{{nps_giru_subscription_key}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{url_common_nps}}/{{version}}/cards/{{CodigoUnico}}/debit-cards",
+					"host": [
+						"{{url_common_nps}}"
+					],
+					"path": [
+						"{{version}}",
+						"cards",
+						"{{CodigoUnico}}",
+						"debit-cards"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "create folder",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"var jsonData = JSON.parse(responseBody);\r",
+							"\r",
+							"pm.environment.set(\"folder\", jsonData.folder);\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{nps_oauth_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Ocp-Apim-Subscription-Key",
+						"type": "text",
+						"value": "{{nps_giru_subscription_key}}"
+					},
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{url_support_nps}}{{version}}/files/folder",
+					"host": [
+						"{{url_support_nps}}{{version}}"
+					],
+					"path": [
+						"files",
+						"folder"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "upload File",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);\r",
+							"\r",
+							"    pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"    });\r",
+							"/*\r",
+							"    pm.test(\"Mensaje: \" + jsonData[0].status, function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"    });\r",
+							"*/\r",
+							"console.log(\"FOLDER=\"+pm.environment.get(\"folder\"));"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{nps_oauth_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Ocp-Apim-Subscription-Key",
+						"type": "text",
+						"value": "{{nps_giru_subscription_key}}"
+					},
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "folder",
+							"value": "{{folder}}",
+							"type": "text"
+						},
+						{
+							"key": "files",
+							"type": "file",
+							"src": "Adjuntos/GIRU-SUPERVISOR02_08_2022 02_06_22.xlsx"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{url_support_nps}}{{version}}/files/upload",
+					"host": [
+						"{{url_support_nps}}{{version}}"
+					],
+					"path": [
+						"files",
+						"upload"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Generar Reclamo",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"var additionalDATA_TD = [{\r",
+							"        \"referenceData\": \"PRODUCT_DATA\",\r",
+							"        \"id\": null,\r",
+							"        \"name\": \"cardNumber\",\r",
+							"        \"value\": \"{{cardNumberTD}}\",\r",
+							"        \"type\": \"\"\r",
+							"    },\r",
+							"    {\r",
+							"        \"referenceData\": \"PRODUCT_DATA\",\r",
+							"        \"id\": null,\r",
+							"        \"name\": \"cardSituation\",\r",
+							"        \"value\": \"{{situationDescription}}\",\r",
+							"        \"type\": \"\"\r",
+							"    },\r",
+							"    {\r",
+							"        \"referenceData\": \"PRODUCT_DATA\",\r",
+							"        \"id\": null,\r",
+							"        \"name\": \"cardStatus\",\r",
+							"        \"value\": \"{{situationDescription}}\",\r",
+							"        \"type\": \"\"\r",
+							"    },\r",
+							"    {\r",
+							"        \"referenceData\": \"PRODUCT_DATA\",\r",
+							"        \"id\": null,\r",
+							"        \"name\": \"accountNumber\",\r",
+							"        \"value\": \"{{numCuenta}}\",\r",
+							"        \"type\": \"\"\r",
+							"    },\r",
+							"    {\r",
+							"        \"referenceData\": \"PRODUCT_DATA\",\r",
+							"        \"id\": null,\r",
+							"        \"name\": \"mark\",\r",
+							"        \"value\": \"VISA\",\r",
+							"        \"type\": \"\"\r",
+							"    },\r",
+							"    {\r",
+							"        \"referenceData\": \"PRODUCT_DATA\",\r",
+							"        \"id\": null,\r",
+							"        \"name\": \"markCode\",\r",
+							"        \"value\": \"01\",\r",
+							"        \"type\": \"\"\r",
+							"    },\r",
+							"    {\r",
+							"        \"referenceData\": \"PRODUCT_DATA\",\r",
+							"        \"id\": null,\r",
+							"        \"name\": \"type\",\r",
+							"        \"value\": \"{{tipoCuenta}}\",\r",
+							"        \"type\": \"\"\r",
+							"    },\r",
+							"    {\r",
+							"        \"referenceData\": \"PRODUCT_DATA\",\r",
+							"        \"id\": null,\r",
+							"        \"name\": \"typeCode\",\r",
+							"        \"value\": \"tp\",\r",
+							"        \"type\": \"\"\r",
+							"    },\r",
+							"    {\r",
+							"        \"referenceData\": \"PRODUCT_DATA\",\r",
+							"        \"id\": null,\r",
+							"        \"name\": \"accountName\",\r",
+							"        \"value\": \"{{subTipoCuenta}}\",\r",
+							"        \"type\": \"\"\r",
+							"    },\r",
+							"    {\r",
+							"        \"referenceData\": \"PRODUCT_DATA\",\r",
+							"        \"id\": null,\r",
+							"        \"name\": \"moneda\",\r",
+							"        \"value\": \"{{monedaCuenta}}\",\r",
+							"        \"type\": \"\"\r",
+							"    }\r",
+							"]\r",
+							"\r",
+							"var additionalDATA_TC = [{\r",
+							"        \"referenceData\": \"PRODUCT_DATA\",\r",
+							"        \"id\": null,\r",
+							"        \"name\": \"cardNumber\",\r",
+							"        \"value\": \"{{cardNumberTC}}\",\r",
+							"        \"type\": \"\"\r",
+							"    },\r",
+							"    {\r",
+							"        \"referenceData\": \"PRODUCT_DATA\",\r",
+							"        \"id\": null,\r",
+							"        \"name\": \"cardSituation\",\r",
+							"        \"value\": \"{{situation}}\",\r",
+							"        \"type\": \"\"\r",
+							"    },\r",
+							"    {\r",
+							"        \"referenceData\": \"PRODUCT_DATA\",\r",
+							"        \"id\": null,\r",
+							"        \"name\": \"cardStatus\",\r",
+							"        \"value\": \"{{status}}\",\r",
+							"        \"type\": \"\"\r",
+							"    },\r",
+							"    {\r",
+							"        \"referenceData\": \"PRODUCT_DATA\",\r",
+							"        \"id\": null,\r",
+							"        \"name\": \"accountNumber\",\r",
+							"        \"value\": \"{{accountNumber}}\",\r",
+							"        \"type\": \"\"\r",
+							"    },\r",
+							"    {\r",
+							"        \"referenceData\": \"PRODUCT_DATA\",\r",
+							"        \"id\": null,\r",
+							"        \"name\": \"mark\",\r",
+							"        \"value\": \"{{mark}}\",\r",
+							"        \"type\": \"\"\r",
+							"    },\r",
+							"    {\r",
+							"        \"referenceData\": \"PRODUCT_DATA\",\r",
+							"        \"id\": null,\r",
+							"        \"name\": \"markCode\",\r",
+							"        \"value\": \"{{markCode}}\",\r",
+							"        \"type\": \"\"\r",
+							"    },\r",
+							"    {\r",
+							"        \"referenceData\": \"PRODUCT_DATA\",\r",
+							"        \"id\": null,\r",
+							"        \"name\": \"type\",\r",
+							"        \"value\": \"{{type}}\",\r",
+							"        \"type\": \"\"\r",
+							"    },\r",
+							"    {\r",
+							"        \"referenceData\": \"PRODUCT_DATA\",\r",
+							"        \"id\": null,\r",
+							"        \"name\": \"typeCode\",\r",
+							"        \"value\": \"{{typeCode}}\",\r",
+							"        \"type\": \"\"\r",
+							"    }\r",
+							"]\r",
+							"\r",
+							"\r",
+							"if(data.Motivo1>=21&&data.Motivo1<=26||\r",
+							"    data.Motivo2>=21&&data.Motivo2<=26||\r",
+							"    data.Motivo3>=21&&data.Motivo3<=26){\r",
+							"    pm.environment.set(\"producto\",\"CREDIT_CARD\");\r",
+							"    pm.environment.set(\"additionalDATA\", JSON.stringify(additionalDATA_TC));\r",
+							"}else if(data.Motivo1>=34&&data.Motivo1<=39||\r",
+							"    data.Motivo2>=34&&data.Motivo2<=39||\r",
+							"    data.Motivo3>=34&&data.Motivo3<=39){\r",
+							"    pm.environment.set(\"producto\",\"DEBIT_CARD\");\r",
+							"    pm.environment.set(\"additionalDATA\", JSON.stringify(additionalDATA_TD));\r",
+							"}\r",
+							"\r",
+							"\r",
+							"if (data.Motivo1 == 35||data.Motivo2 == 35||data.Motivo3 == 35) {\r",
+							"    var campo=\"Motivo\"\r",
+							"}else{\r",
+							"    campo=\"Comercio\"\r",
+							"}\r",
+							"\r",
+							"\r",
+							"//JSON ADICIONALES CMP valores 1\r",
+							"var cmp35val1 = [{\r",
+							"        \"name\": \"Fecha\",\r",
+							"        \"value\": data.Fecha1,\r",
+							"        \"type\": \"Date\"\r",
+							"    },\r",
+							"    {\r",
+							"        \"name\": \"Moneda\",\r",
+							"        \"value\": \"{{Moneda1}}\",\r",
+							"        \"type\": \"String\"\r",
+							"    },\r",
+							"    {\r",
+							"        \"name\": \"Monto\",\r",
+							"        \"value\": \"{{Monto1}}\",\r",
+							"        \"type\": \"Double\"\r",
+							"    },\r",
+							"    {\r",
+							"        \"name\": campo,\r",
+							"        \"value\": \"{{Comercio1}}\",\r",
+							"        \"type\": \"String\"\r",
+							"    },\r",
+							"    {\r",
+							"        \"name\": \"Estado\",\r",
+							"        \"value\": \"MANUAL\",\r",
+							"        \"type\": \"String\"\r",
+							"    },\r",
+							"    {\r",
+							"        \"name\": \"ProductoServicioAdquirido\",\r",
+							"        \"value\": \"{{ProductService}}\",\r",
+							"        \"type\": \"String\"\r",
+							"    },\r",
+							"    {\r",
+							"        \"name\": \"TipoServicio\",\r",
+							"        \"value\": \"{{TipoService}}\",\r",
+							"        \"type\": \"String\"\r",
+							"    },\r",
+							"    {\r",
+							"        \"name\": \"FechaArriboProductoServicio\",\r",
+							"        \"value\": data.FechaArriboProductoServicio,\r",
+							"        \"type\": \"Date\"\r",
+							"    }\r",
+							"]\r",
+							"\r",
+							"var general1 = [{\r",
+							"        \"name\": \"Fecha\",\r",
+							"        \"value\": data.Fecha1,\r",
+							"        \"type\": \"Date\"\r",
+							"    },\r",
+							"    {\r",
+							"        \"name\": \"Moneda\",\r",
+							"        \"value\": \"{{Moneda1}}\",\r",
+							"        \"type\": \"String\"\r",
+							"    },\r",
+							"    {\r",
+							"        \"name\": \"Monto\",\r",
+							"        \"value\": \"{{Monto1}}\",\r",
+							"        \"type\": \"Double\"\r",
+							"    },\r",
+							"    {\r",
+							"        \"name\": \"Motivo\",\r",
+							"        \"value\": \"{{Comercio1}}\",\r",
+							"        \"type\": \"String\"\r",
+							"    }\r",
+							"]\r",
+							"\r",
+							"var generalTC1 = [\r",
+							"    {\r",
+							"        \"name\": \"Moneda\",\r",
+							"        \"value\": \"{{Moneda1}}\",\r",
+							"        \"type\": \"String\"\r",
+							"    },\r",
+							"    {\r",
+							"        \"name\": \"Monto\",\r",
+							"        \"value\": \"{{Monto1}}\",\r",
+							"        \"type\": \"Double\"\r",
+							"    },\r",
+							"    {\r",
+							"        \"name\": \"Fecha\",\r",
+							"        \"value\": data.Fecha1,\r",
+							"        \"type\": \"Date\"\r",
+							"    },\r",
+							"    {\r",
+							"        \"name\": \"Comercio\",\r",
+							"        \"value\": \"{{Comercio1}}\",\r",
+							"        \"type\": \"String\"\r",
+							"    },\r",
+							"    {\r",
+							"        \"name\":\"Estado\",\r",
+							"        \"value\":\"MANUAL\",\r",
+							"        \"type\":\"String\"\r",
+							"    }\r",
+							"]\r",
+							"//JSON ADICIONALES CMP valores 2\r",
+							"var cmp35val2 = [{\r",
+							"        \"name\": \"Fecha\",\r",
+							"        \"value\": data.Fecha2,\r",
+							"        \"type\": \"Date\"\r",
+							"    },\r",
+							"    {\r",
+							"        \"name\": \"Moneda\",\r",
+							"        \"value\": \"{{Moneda2}}\",\r",
+							"        \"type\": \"String\"\r",
+							"    },\r",
+							"    {\r",
+							"        \"name\": \"Monto\",\r",
+							"        \"value\": \"{{Monto2}}\",\r",
+							"        \"type\": \"Double\"\r",
+							"    },\r",
+							"    {\r",
+							"        \"name\": campo,\r",
+							"        \"value\": \"{{Comercio2}}\",\r",
+							"        \"type\": \"String\"\r",
+							"    },\r",
+							"    {\r",
+							"        \"name\": \"Estado\",\r",
+							"        \"value\": \"MANUAL\",\r",
+							"        \"type\": \"String\"\r",
+							"    },\r",
+							"    {\r",
+							"        \"name\": \"ProductoServicioAdquirido\",\r",
+							"        \"value\": \"{{ProductService}}\",\r",
+							"        \"type\": \"String\"\r",
+							"    },\r",
+							"    {\r",
+							"        \"name\": \"TipoServicio\",\r",
+							"        \"value\": \"{{TipoService}}\",\r",
+							"        \"type\": \"String\"\r",
+							"    },\r",
+							"    {\r",
+							"        \"name\": \"FechaArriboProductoServicio\",\r",
+							"        \"value\": data.FechaArriboProductoServicio,\r",
+							"        \"type\": \"Date\"\r",
+							"    }\r",
+							"]\r",
+							"\r",
+							"var general2 = [{\r",
+							"        \"name\": \"Fecha\",\r",
+							"        \"value\": data.Fecha2,\r",
+							"        \"type\": \"Date\"\r",
+							"    },\r",
+							"    {\r",
+							"        \"name\": \"Moneda\",\r",
+							"        \"value\": \"{{Moneda2}}\",\r",
+							"        \"type\": \"String\"\r",
+							"    },\r",
+							"    {\r",
+							"        \"name\": \"Monto\",\r",
+							"        \"value\": \"{{Monto2}}\",\r",
+							"        \"type\": \"Double\"\r",
+							"    },\r",
+							"    {\r",
+							"        \"name\": \"Motivo\",\r",
+							"        \"value\": \"{{Comercio2}}\",\r",
+							"        \"type\": \"String\"\r",
+							"    }\r",
+							"]\r",
+							"\r",
+							"var generalTC2 = [\r",
+							"    {\r",
+							"        \"name\": \"Moneda\",\r",
+							"        \"value\": \"{{Moneda2}}\",\r",
+							"        \"type\": \"String\"\r",
+							"    },\r",
+							"    {\r",
+							"        \"name\": \"Monto\",\r",
+							"        \"value\": \"{{Monto2}}\",\r",
+							"        \"type\": \"Double\"\r",
+							"    },\r",
+							"    {\r",
+							"        \"name\": \"Fecha\",\r",
+							"        \"value\": data.Fecha2,\r",
+							"        \"type\": \"Date\"\r",
+							"    },\r",
+							"    {\r",
+							"        \"name\": \"Comercio\",\r",
+							"        \"value\": \"{{Comercio2}}\",\r",
+							"        \"type\": \"String\"\r",
+							"    },\r",
+							"    {\r",
+							"        \"name\":\"Estado\",\r",
+							"        \"value\":\"MANUAL\",\r",
+							"        \"type\":\"String\"\r",
+							"    }\r",
+							"]\r",
+							"\r",
+							"//JSON ADICIONALES CMP valores 3\r",
+							"var cmp35val3 = [{\r",
+							"        \"name\": \"Fecha\",\r",
+							"        \"value\": data.Fecha3,\r",
+							"        \"type\": \"Date\"\r",
+							"    },\r",
+							"    {\r",
+							"        \"name\": \"Moneda\",\r",
+							"        \"value\": \"{{Moneda3}}\",\r",
+							"        \"type\": \"String\"\r",
+							"    },\r",
+							"    {\r",
+							"        \"name\": \"Monto\",\r",
+							"        \"value\": \"{{Monto3}}\",\r",
+							"        \"type\": \"Double\"\r",
+							"    },\r",
+							"    {\r",
+							"        \"name\": campo,\r",
+							"        \"value\": \"{{Comercio3}}\",\r",
+							"        \"type\": \"String\"\r",
+							"    },\r",
+							"    {\r",
+							"        \"name\": \"Estado\",\r",
+							"        \"value\": \"MANUAL\",\r",
+							"        \"type\": \"String\"\r",
+							"    },\r",
+							"    {\r",
+							"        \"name\": \"ProductoServicioAdquirido\",\r",
+							"        \"value\": \"{{ProductService}}\",\r",
+							"        \"type\": \"String\"\r",
+							"    },\r",
+							"    {\r",
+							"        \"name\": \"TipoServicio\",\r",
+							"        \"value\": \"{{TipoService}}\",\r",
+							"        \"type\": \"String\"\r",
+							"    },\r",
+							"    {\r",
+							"        \"name\": \"FechaArriboProductoServicio\",\r",
+							"        \"value\": data.FechaArriboProductoServicio,\r",
+							"        \"type\": \"Date\"\r",
+							"    }\r",
+							"]\r",
+							"\r",
+							"var general3 = [{\r",
+							"        \"name\": \"Fecha\",\r",
+							"        \"value\": data.Fecha3,\r",
+							"        \"type\": \"Date\"\r",
+							"    },\r",
+							"    {\r",
+							"        \"name\": \"Moneda\",\r",
+							"        \"value\": \"{{Moneda3}}\",\r",
+							"        \"type\": \"String\"\r",
+							"    },\r",
+							"    {\r",
+							"        \"name\": \"Monto\",\r",
+							"        \"value\": \"{{Monto3}}\",\r",
+							"        \"type\": \"Double\"\r",
+							"    },\r",
+							"    {\r",
+							"        \"name\": \"Motivo\",\r",
+							"        \"value\": \"{{Comercio3}}\",\r",
+							"        \"type\": \"String\"\r",
+							"    }\r",
+							"]\r",
+							"\r",
+							"var generalTC3 = [\r",
+							"    {\r",
+							"        \"name\": \"Moneda\",\r",
+							"        \"value\": \"{{Moneda3}}\",\r",
+							"        \"type\": \"String\"\r",
+							"    },\r",
+							"    {\r",
+							"        \"name\": \"Monto\",\r",
+							"        \"value\": \"{{Monto3}}\",\r",
+							"        \"type\": \"Double\"\r",
+							"    },\r",
+							"    {\r",
+							"        \"name\": \"Fecha\",\r",
+							"        \"value\": data.Fecha3,\r",
+							"        \"type\": \"Date\"\r",
+							"    },\r",
+							"    {\r",
+							"        \"name\": \"Comercio\",\r",
+							"        \"value\": \"{{Comercio3}}\",\r",
+							"        \"type\": \"String\"\r",
+							"    },\r",
+							"    {\r",
+							"        \"name\":\"Estado\",\r",
+							"        \"value\":\"MANUAL\",\r",
+							"        \"type\":\"String\"\r",
+							"    }\r",
+							"]\r",
+							"\r",
+							"var mov1, mov2, mov3, mov4, mov5, mov6, mov7, mov8, mov9;\r",
+							"//TIPOLOGIAS CANTIDAD\r",
+							"if (data.Motivo1 == 35||data.Motivo1 == 22) {\r",
+							"    mov1 = cmp35val1;\r",
+							"    mov2 = cmp35val2;\r",
+							"    mov3 = cmp35val3;\r",
+							"} else if (data.Motivo1 == 21||data.Motivo1>=23&&data.Motivo1<=26) {\r",
+							"    mov1 = generalTC1;\r",
+							"    mov2 = generalTC2;\r",
+							"    mov3 = generalTC3;\r",
+							"}else {\r",
+							"    mov1 = general1;\r",
+							"    mov2 = general2;\r",
+							"    mov3 = general3;\r",
+							"}\r",
+							"\r",
+							"if (data.Motivo2 == 35||data.Motivo2 == 22) {\r",
+							"    mov4 = cmp35val1;\r",
+							"    mov5 = cmp35val2;\r",
+							"    mov6 = cmp35val3;\r",
+							"} else if (data.Motivo2 == 21||data.Motivo2>=23&&data.Motivo2<=26) {\r",
+							"    mov4 = generalTC1;\r",
+							"    mov5 = generalTC2;\r",
+							"    mov6 = generalTC3;\r",
+							"} else {\r",
+							"    mov4 = general1;\r",
+							"    mov5 = general2;\r",
+							"    mov6 = general3;\r",
+							"}\r",
+							"if (data.Motivo3 == 35||data.Motivo3 == 22) {\r",
+							"    mov7 = cmp35val1;\r",
+							"    mov8 = cmp35val2;\r",
+							"    mov9 = cmp35val3;\r",
+							"} else if (data.Motivo3 == 21||data.Motivo3>=23&&data.Motivo3<=26) {\r",
+							"    mov7 = generalTC1;\r",
+							"    mov8 = generalTC2;\r",
+							"    mov9 = generalTC3;\r",
+							"} else {\r",
+							"    mov7 = general1;\r",
+							"    mov8 = general2;\r",
+							"    mov9 = general3;\r",
+							"}\r",
+							"\r",
+							"if (data.CantidadMotivos == 1) {\r",
+							"    var tipologias = [{\r",
+							"        \"typology\": {\r",
+							"            \"id\": \"{{Motivo1}}\"\r",
+							"        },\r",
+							"        \"expirationDate\": data.expirationDate,\r",
+							"        \"movements\": [{\r",
+							"            \"fields\": mov1\r",
+							"        }]\r",
+							"    }]\r",
+							"    pm.environment.set(\"tipologias\", JSON.stringify(tipologias));\r",
+							"}\r",
+							"\r",
+							"\r",
+							"if (data.CantidadMotivos == 2) {\r",
+							"    var tipologias = [{\r",
+							"            \"typology\": {\r",
+							"                \"id\": \"{{Motivo1}}\"\r",
+							"            },\r",
+							"            \"expirationDate\": data.expirationDate,\r",
+							"            \"movements\": [{\r",
+							"                    \"fields\": mov1\r",
+							"                },\r",
+							"                {\r",
+							"                    \"fields\": mov2\r",
+							"                }\r",
+							"            ]\r",
+							"        },\r",
+							"        {\r",
+							"            \"typology\": {\r",
+							"                \"id\": \"{{Motivo2}}\"\r",
+							"            },\r",
+							"            \"expirationDate\": data.expirationDate,\r",
+							"            \"movements\": [{\r",
+							"                    \"fields\": mov4\r",
+							"                },\r",
+							"                {\r",
+							"                    \"fields\": mov5\r",
+							"                }\r",
+							"            ]\r",
+							"        }\r",
+							"    ]\r",
+							"    pm.environment.set(\"tipologias\", JSON.stringify(tipologias));\r",
+							"\r",
+							"}\r",
+							"\r",
+							"if (data.CantidadMotivos == 3) {\r",
+							"    var tipologias = [{\r",
+							"            \"typology\": {\r",
+							"                \"id\": \"{{Motivo1}}\"\r",
+							"            },\r",
+							"            \"expirationDate\": data.expirationDate,\r",
+							"            \"movements\": [{\r",
+							"                    \"fields\": mov1\r",
+							"                },\r",
+							"                {\r",
+							"                    \"fields\": mov2\r",
+							"                },\r",
+							"                {\r",
+							"                    \"fields\": mov3\r",
+							"                }\r",
+							"\r",
+							"            ]\r",
+							"        },\r",
+							"        {\r",
+							"            \"typology\": {\r",
+							"                \"id\": \"{{Motivo2}}\"\r",
+							"            },\r",
+							"            \"expirationDate\": data.expirationDate,\r",
+							"            \"movements\": [{\r",
+							"                    \"fields\": mov4\r",
+							"                },\r",
+							"                {\r",
+							"                    \"fields\": mov5\r",
+							"                },\r",
+							"                {\r",
+							"                    \"fields\": mov6\r",
+							"                }\r",
+							"\r",
+							"            ]\r",
+							"        },\r",
+							"        {\r",
+							"            \"typology\": {\r",
+							"                \"id\": \"{{Motivo3}}\"\r",
+							"            },\r",
+							"            \"expirationDate\": data.expirationDate,\r",
+							"            \"movements\": [{\r",
+							"                    \"fields\": mov7\r",
+							"                },\r",
+							"                {\r",
+							"                    \"fields\": mov8\r",
+							"                },\r",
+							"                {\r",
+							"                    \"fields\": mov9\r",
+							"                }\r",
+							"\r",
+							"            ]\r",
+							"        }\r",
+							"    ]\r",
+							"    pm.environment.set(\"tipologias\", JSON.stringify(tipologias));\r",
+							"}\r",
+							"\r",
+							"//EMAIL O DIRECCION -MEDIO DE RESPUESTA\r",
+							"var res = \"EMAIL\"\r",
+							"console.log(res);\r",
+							"if (data.MedioRespuesta == res) {\r",
+							"    var EMAIL = {\r",
+							"        \"origin\": \"GIRU\",\r",
+							"        \"type\": \"PERSONAL\",\r",
+							"        \"email\": \"zamora.ezt@gmail.com\"\r",
+							"    }\r",
+							"    var ADDRESS = null\r",
+							"    pm.environment.set(\"EMAIL\", JSON.stringify(EMAIL));\r",
+							"    pm.environment.set(\"ADDRESS\", JSON.stringify(ADDRESS));\r",
+							"} else {\r",
+							"    var ADDRESS = {\r",
+							"        \"department\": \"Callao\",\r",
+							"        \"province\": \"Callao\",\r",
+							"        \"district\": \"Callao\",\r",
+							"        \"streetType\": \"2\",\r",
+							"        \"streetName\": \"AV COMA\",\r",
+							"        \"neighborhood\": \"UREL\",\r",
+							"        \"landmark\": \"Espalda del cementerio\",\r",
+							"        \"streetTypeObject\": [{\r",
+							"            \"streetNumber\": \"4\",\r",
+							"            \"block\": \"C\",\r",
+							"            \"lot\": \"5\",\r",
+							"            \"apartment\": null\r",
+							"        }],\r",
+							"        \"hiddenControl\": true,\r",
+							"        \"ubigeo\": \"240101\",\r",
+							"        \"departmentCode\": \"24\",\r",
+							"        \"provinceCode\": \"2401\",\r",
+							"        \"streetTypeCode\": \"2\",\r",
+							"        \"streetNumber\": \"4\",\r",
+							"        \"block\": \"C\",\r",
+							"        \"lot\": \"5\",\r",
+							"        \"apartment\": null,\r",
+							"        \"origin\": \"GIRU\",\r",
+							"        \"country\": \"PERU\"\r",
+							"    }\r",
+							"    var EMAIL = null\r",
+							"    pm.environment.set(\"EMAIL\", JSON.stringify(EMAIL));\r",
+							"    pm.environment.set(\"ADDRESS\", JSON.stringify(ADDRESS));\r",
+							"}"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);\r",
+							"console.log(pm.response.code);\r",
+							"pm.environment.set(\"nps_claim_number_gen\", jsonData.claimNumber);\r",
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"pm.test(\"Nro de reclamo es : \"+jsonData.claimNumber, function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"/*\r",
+							"if(data.EstadoFinal=='Creación' || pm.response.code != 200){\r",
+							"    postman.setNextRequest(null);\r",
+							"}\r",
+							"*/"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{nps_oauth_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					},
+					{
+						"key": "Ocp-Apim-Subscription-Key",
+						"type": "text",
+						"value": "{{nps_giru_subscription_key}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"flagAutonomy\": null,\n  \"flagManualAutonomy\":null,\n  \"flagSupervisor\": null,\n  \"comments\": \"TEST\",\n  \"internal_comments\": \"TEST COMENTARIO INTERNO \",\n  \"favoriteResponseMedium\": \"{{MedioRespuesta}}\",\n  \"amountRequestedSupervisorPEN\": 0,\n  \"amountRequestedSupervisorUSD\": 0,\n\n   \"additionalData\": {{additionalDATA}},\n     \"activity\": \"\",\n  \"event\": {\n    \"id\": {{nps_event_id_gen}},\n    \"product\": {\n      \"code\": \"{{producto}}\"\n    },\n    \"contact\": {\n      \"telephone\": {\n\t\t\"type\": \"CELULAR\",\n\t\t\"operator\": \"CLARO\",\n\t\t\"number\": \"000000000\",\n\t\t\"origin\":\"VISION\"\n\t  },\n\t  \"email\": {{EMAIL}},\t  \n      \"address\": {{ADDRESS}}\n    }\n  },\n  \"details\": {{tipologias}},\n  \"folder\":\"{{folder}}\"\n}"
+				},
+				"url": {
+					"raw": "{{url_claim_nps}}/claims",
+					"host": [
+						"{{url_claim_nps}}"
+					],
+					"path": [
+						"claims"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
