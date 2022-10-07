@@ -1,6 +1,6 @@
 parameters:
     format: '_DATAFORMAT_CMP_UAT_STG.csv'
-    
+
 steps:
 - task: CmdLine@2
   displayName: 'Install Newman'
@@ -16,7 +16,7 @@ steps:
   displayName: 'Run CMP_por_el_comercioMarca-TC/TD'
   continueOnError: true
   inputs:
-    script: 'newman run CMP/*.json -d CMP/${{ parameters.data }}${{ parameters.format }} 
+    script: 'newman run CMP/*.json -d CMP/${{ parameters.dat }}_DATAFORMAT_CMP_UAT_STG.csv
                                                            -e Entornos/GIRU_UAT_Environment.postman_environment.json 
                                                            --reporters cli,junit,htmlextra 
                                                            --reporter-junit-export Results/junitReport.xml 
