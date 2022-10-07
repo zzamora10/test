@@ -79,6 +79,7 @@ jobs:
                 it: ${{ parameters.iteraciones }}
                 dat: ${{ parameters.data }}
                 tip: ${{ parameters.tipologia }}
+                ent: ${{ parameters.entorno }}
             - script: echo step one 
 
 
