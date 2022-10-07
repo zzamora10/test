@@ -1,8 +1,8 @@
-   - ${{ if eq(parameters.it, "Full") }}:
-      num_ejecucion: " "
+${{ if eq(parameters.it, "Full") }}:
+      num_ejecucion: ""
      ${{ else }}:
       num_ejecucion: ${{ parameters.it }}
-      
+
 steps:
 - task: CmdLine@2
   displayName: 'Install Newman-Reporter-htmlextra'
