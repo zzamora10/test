@@ -1,6 +1,7 @@
 variables:
 - ${{ if contains(parameters.it, 'Full') }}:
-  iteracion: ''
+- name: iteracion
+  value: ''
 
 steps:
 - task: CmdLine@2
