@@ -47,12 +47,12 @@ jobs:
 - ${{ if contains(parameters.entorno, 'UAT') }}:
   - job: Ruta 1
     steps:
-    - script: echo Building ${{ parameter.entorno }}...echo ${{ parameter.iteraciones }}
+    - script: echo Building ${{ parameters.entorno }}...${{ parameters.iteraciones }}
 - ${{ if contains(parameters.entorno, 'STG') }}:
   - job: Ruta 2
     steps:
-    - script: echo Building ${{ parameter.entorno }}...${{ parameter.iteraciones }}
-- ${{ if contains(parameters.entorno, '') }}:
+    - script: echo Building ${{ parameters.entorno }}...${{ parameters.iteraciones }}
+- ${{ if contains(parameters.entorno, ' ') }}:
   - job: Ruta 3
     steps:
     - script: echo Nada...
