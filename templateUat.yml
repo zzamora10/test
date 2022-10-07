@@ -1,9 +1,13 @@
-pool:
-  vmImage: ubuntu-latest
-
-
 steps:
+- task: CmdLine@2
+  displayName: 'Install Newman'
+  inputs:
+    script: 'sudo npm install -g newman'
 
+- task: CmdLine@2
+  displayName: 'Install Newman-Reporter-htmlextra'
+  inputs:
+    script: 'sudo npm install -g newman-reporter-htmlextra'
 
 - task: CmdLine@2
   displayName: 'Test CMP'
@@ -14,7 +18,7 @@ steps:
                                                            --reporters cli,junit,htmlextra 
                                                            --reporter-junit-export Results/junitReport.xml 
                                                            --reporter-htmlextra-export ./Results/index.html
-                                                           -n 2'
+                                                           -n ${{ parameters.iteraciones }}'
     workingDirectory: '$(System.DefaultWorkingDirectory)/'
 
 - task: PublishTestResults@2
