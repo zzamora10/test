@@ -1,8 +1,8 @@
 parameters: 
-  - name: num_ejecucion
-    type: string
+  name: num_ejecucion
+  type: string
   ${{ if contains(parameters.it, 'Full') }}:
-    values: ''
+    values: ""
   ${{ else }}:
     values: ${{ parameters.it }}
 
