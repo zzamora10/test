@@ -27,7 +27,8 @@ parameters:
 - name: tipo
   type: string
   values:  
-  -  echo "$TOOLS_REF"
+  - 
+  - ''$(Build.SourcesDirectory)'''
 
 trigger: none
 
