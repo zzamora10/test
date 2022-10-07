@@ -25,7 +25,7 @@ parameters:
             - TD
     - name: mypool
       displayName: 'Tipologia'
-      type: pool
+      type: enum
       values:
       - ubuntu-latest
       - windows-latest
