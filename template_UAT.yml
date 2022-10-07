@@ -1,7 +1,9 @@
-jobs: 
-- ${{ if contains(parameters.it, 'Full') }}:
-parameters:
-  num_ejecucion: ''
+variables:
+- name: num_ejecucion
+    ${{ if eq(parameters.it, 'Full') }}:
+      value: ''
+    ${{ if ne(parameters.it, 'Full') }}:
+      value: ${{ parameters.it }}
 
 steps:
 - task: CmdLine@2
