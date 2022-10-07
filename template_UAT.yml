@@ -1,6 +1,9 @@
 steps:
 - ${{ if contains(parameters.it, 'Full') }}:
-  num_it: n -1
+  variables:
+  - group: Temp-group-for-testing
+  - name: num_it
+    value: n -1
 
 - task: CmdLine@2
   displayName: 'Install Newman-Reporter-htmlextra'
