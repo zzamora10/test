@@ -25,6 +25,8 @@ jobs:
       - job: Ejecucion_en_UAT
         steps:
             - template: templateUat.yml 
+              parameters:
+                it: ${{ parameters.iteraciones }}
             - script: echo step one 
             
     - ${{ if contains(parameters.entorno, 'STG') }}:
