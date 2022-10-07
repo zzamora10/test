@@ -10,7 +10,7 @@ parameters:
     - name: iteraciones
       type: string
       values:
-            - Todo
+            - Full
             - 1 
             - 2 
             - 3 
