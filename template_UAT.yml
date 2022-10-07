@@ -1,8 +1,8 @@
 parameters: 
   - name: num_ejecucion
     type: string
-    ${{ if contains(${{ parameters.it }}, 'Full') }}:
-    value: -n 1
+    ${{ if contains(parameters.it, 'Full') }}:
+    num_ejecucion: -n 1
 
 
 steps:
