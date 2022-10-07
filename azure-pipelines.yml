@@ -1,3 +1,20 @@
+resources:
+  repositories:
+  - repository: test
+    type: git
+    name: test/test
+    ref: master
+
+steps:
+#checkout referenced repository
+  - checkout: test
+#List SourcesDirectory files
+  - task: Bash@3
+    inputs:
+      targetType: 'inline'
+      script: 'ls ''$(Build.SourcesDirectory)'''
+
+      
 parameters:
 - name: entorno
   type: string
