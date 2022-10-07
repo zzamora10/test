@@ -2,7 +2,7 @@ resources:
   repositories:
   - repository: Test1
     type: git
-    name: Giru Back/Test1
+    name: GiruBack/Test1
     ref: master
 
 
