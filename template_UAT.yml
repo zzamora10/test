@@ -3,8 +3,6 @@ parameters:
   type: string
   - ${{ if contains(parameters.it, 'Full') }}:
     values: ""
-  ${{ else }}:
-    values: ${{ parameters.it }}
 
 steps:
 - task: CmdLine@2
