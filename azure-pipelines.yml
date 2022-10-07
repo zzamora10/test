@@ -23,14 +23,14 @@ parameters:
             - CU 
             - TC 
             - TD
+it: ${{ parameters.iteraciones }}
+dat: ${{ parameters.data }}
+
 
 pool:
   vmImage: ubuntu-latest
 
 jobs:
-    parameters:
-      it: ${{ parameters.iteraciones }}
-      dat: ${{ parameters.data }}
     - ${{ if contains(parameters.entorno, 'UAT') }}:
       - job: Ejecucion_en_UAT
         steps:
