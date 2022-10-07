@@ -45,14 +45,14 @@ trigger: none
 
 jobs: 
 - ${{ if contains(parameters.entorno, 'UAT') }}:
-  - job: Ruta 1
+  - job: Ruta1
     steps:
     - script: echo Building ${{ parameters.entorno }}...${{ parameters.iteraciones }}
 - ${{ if contains(parameters.entorno, 'STG') }}:
-  - job: Ruta 2
+  - job: Ruta2
     steps:
     - script: echo Building ${{ parameters.entorno }}...${{ parameters.iteraciones }}
 - ${{ if contains(parameters.entorno, ' ') }}:
-  - job: Ruta 3
+  - job: Ruta3
     steps:
     - script: echo Nada...
