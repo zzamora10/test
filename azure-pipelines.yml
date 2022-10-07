@@ -6,8 +6,7 @@ resources:
     ref: main
 
 variables:
-- name: lista
-  value: OOO 
+  tools.ref: $[ resources.repositories['Test Runner'].ref ]
 
 parameters:
 - name: entorno
@@ -31,9 +30,7 @@ trigger: none
 
 steps:
 #checkout referenced repository
-  - checkout: Test Runner/CPM
+  - checkout: Test Runner
 #List SourcesDirectory files
-  - task: Bash@3
-    inputs:
-      targetType: 'inline'
-      script: 'ls ''$(Build.SourcesDirectory)'''
+- bash: |
+    echo "Tools version: $TOOLS_REF"
