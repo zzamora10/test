@@ -1,11 +1,9 @@
-steps:
-variables:
-- name: num_ejecucion
-    ${{ if eq(parameters.it, 'Full') }}:
-      value: null
-    ${{ if ne(parameters.it, 'Full') }}:
-      value: ${{ parameters.it }}
+   - ${{ if eq(parameters.it, 'Full') }}:
+      num_ejecucion: null
+    - ${{ if ne(parameters.it, 'Full') }}:
+      num_ejecucion: ${{ parameters.it }}
 
+steps:
 - task: CmdLine@2
   displayName: 'Install Newman-Reporter-htmlextra'
   inputs:
