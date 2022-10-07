@@ -1,6 +1,6 @@
 steps:
    - ${{ if eq(parameters.it, ' ') }}:
-      num_ejecucion: |" "
+      num_ejecucion: " "
     - ${{ if ne(parameters.it, ' ') }}:
       num_ejecucion: ${{ parameters.it }}
 - task: CmdLine@2
