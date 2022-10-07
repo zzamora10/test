@@ -1,5 +1,5 @@
 steps:
-variables:
+- variables:
   ${{ if contains(parameters.it, 'Full') }}:
       num_ejecucion: ''
   ${{ else }}:
