@@ -1,3 +1,4 @@
+jobs: 
 - ${{ if contains(parameters.it, 'Full') }}:
 parameters:
   num_ejecucion: ''
