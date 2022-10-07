@@ -1,11 +1,11 @@
 parameters:
-- name: entornos
+- name: entorno
   type: string
   default: UAT
   values:
   - UAT
   - STG
-- name: N° Iteraciones
+- name: iteraciones
   type: number
   default: 2
   values:
@@ -42,26 +42,26 @@ parameters:
 
 trigger: none
 
+pool:
+  vmImage: ubuntu-latest
+
+jobs: 
+- job: Install Newman-Reporter-htmlextra
   steps: 
   - task: CmdLine@2
   displayName: 'Install Newman-Reporter-htmlextra'
   inputs:
     script: 'sudo npm install -g newman-reporter-htmlextra'
 
-jobs: 
-- job: Install Newman-Reporter-htmlextra
-  steps: 
-
-
-- ${{ if contains(parameters.entornos, 'UAT') }}:
+- ${{ if contains(parameters.entorno, 'UAT') }}:
   - job: Ruta 1
     steps:
-    - script: echo Building x86...
-- ${{ if contains(parameters.entornos, 'STG') }}:
+    - script: echo Building ${{ parameter.entorno }}...echo ${{ parameter.iteraciones }}
+- ${{ if contains(parameters.entorno, 'STG') }}:
   - job: Ruta 2
     steps:
-    - script: echo Building x64...
-- ${{ if contains(parameters.entornos, '') }}:
+    - script: echo Building ${{ parameter.entorno }}...${{ parameter.iteraciones }}
+- ${{ if contains(parameters.entorno, '') }}:
   - job: Ruta 3
     steps:
     - script: echo Nada...
