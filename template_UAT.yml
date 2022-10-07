@@ -1,5 +1,5 @@
 parameters: 
-num_ejecucion: ${{ parameters.it }}
+- num_ejecucion: ${{ parameters.it }}
 - ${{ if contains(parameters.it, 'Full') }}:
 num_ejecucion: "hola"
 
