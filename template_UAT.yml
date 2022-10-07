@@ -1,6 +1,6 @@
-${{ if eq(parameters.it, "Full") }}:
+- ${{ if contains(parameters.it, 'Full') }}:
       num_ejecucion: ""
-     ${{ else }}:
+  ${{ else }}:
       num_ejecucion: ${{ parameters.it }}
 
 steps:
