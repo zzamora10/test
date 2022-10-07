@@ -4,6 +4,11 @@ resources:
     type: git
     name: GiruBack/Test1
     ref: master
+    - repository: Test Runner
+    type: git
+    name: GiruBack/Test Runner
+    ref: master
+
 
 
 
