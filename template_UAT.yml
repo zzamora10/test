@@ -2,7 +2,8 @@ parameters:
   - name: num_ejecucion
     type: string
     ${{ if contains(parameters.it, 'Full') }}:
-    values: ""
+    value: hola
+
 
 steps:
 - task: CmdLine@2
