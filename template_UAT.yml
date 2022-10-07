@@ -1,6 +1,6 @@
 steps:
 - ${{ if contains(parameters.it, 'Full') }}: 
-  ${{variables.num_it}}: n -1
+  ${{variables.num_it.value}}: n -1
 
 - task: CmdLine@2
   displayName: 'Install Newman-Reporter-htmlextra'
