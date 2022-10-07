@@ -1,6 +1,7 @@
+parameters:
+    format: '_DATAFORMAT_CMP_UAT_STG.csv'
+    
 steps:
-  parameters:
-    format: _DATAFORMAT_CMP_UAT_STG.csv
 - task: CmdLine@2
   displayName: 'Install Newman'
   inputs:
