@@ -1,4 +1,8 @@
 steps:
+   - ${{ if eq(parameters.it, ' ') }}:
+      num_ejecucion: |" "
+    - ${{ if ne(parameters.it, ' ') }}:
+      num_ejecucion: ${{ parameters.it }}
 - task: CmdLine@2
   displayName: 'Install Newman-Reporter-htmlextra'
   inputs:
@@ -13,7 +17,7 @@ steps:
                                                            --reporters cli,junit,htmlextra 
                                                            --reporter-junit-export Results/junitReport.xml 
                                                            --reporter-htmlextra-export ./Results/index.html
-                                                           -n ${{ parameters.it }}'
+                                                           -n ${{ parameters.num_ejecucion }}'
     workingDirectory: '$(System.DefaultWorkingDirectory)/'
 
 - task: PublishTestResults@2
