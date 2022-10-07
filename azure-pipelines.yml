@@ -1,11 +1,18 @@
 resources:
   repositories:
-  - repository: test
+  - repository: Test1
     type: git
-    name: test/test
+    name: Giru Back/Test1
     ref: master
 
-
+steps:
+#checkout referenced repository
+  - checkout: test
+#List SourcesDirectory files
+  - task: Bash@3
+    inputs:
+      targetType: 'inline'
+      script: 'ls ''$(Build.SourcesDirectory)'''
 
 
 parameters:
@@ -53,6 +60,7 @@ parameters:
 trigger: none
 
 
+
 jobs: 
 - ${{ if contains(parameters.entorno, 'UAT') }}:
   - job: Ruta1
@@ -66,13 +74,3 @@ jobs:
   - job: Ruta3
     steps:
     - script: echo Nada...
-
-- job: ReadFile
-    steps:
-#checkout referenced repository
-  - checkout: test
-#List SourcesDirectory files
-  - task: Bash@3
-    inputs:
-      targetType: 'inline'
-      script: 'ls ''$(Build.SourcesDirectory)'''
