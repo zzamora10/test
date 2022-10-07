@@ -1,42 +1,31 @@
-resources:
-  repositories:
-  - repository: Test Runner
-    type: git
-    name: GiruBack/Test Runner
-    ref: main
-
-variables:
-  tools.ref: $[ resources.repositories['Test Runner'].ref ]
-
-parameters:
-- name: entorno
-  type: string
-  default: UAT
-  values:  
-  - UAT
-  - STG
-- name: iteraciones
-  type: number
-  default: 2
-  values:
-  - 1
-  - 2
-  - 3
-  - 4
-  - 5
-- name: tipo
-  type: string
-  values:  
-  - $(Build.SourcesDirectory)
-
 trigger: none
 
+parameters:
+    - name: entorno
+      type: string
+      default: UAT
+      values:
+            - UAT 
+            - STG 
+    - name: iteraciones
+      type: number
+      default: 2
+      values:
+            - 1 
+            - 2 
+            - 3 
+            - 4 
+            - 5
 
-steps:
-#checkout referenced repository
-  - checkout: Test Runner
-#List SourcesDirectory files
-  - task: Bash@3
-    inputs:
-      targetType: 'inline'
-      script: 'ls ''$(Build.SourcesDirectory)'''
+jobs:
+    - $ { { if contains(parameters.entorno, 'UAT') } }:
+      - job: Ejecucion_en_UAT
+        steps:
+            - template: templateUat.yml 
+            - script: echo step one 
+            
+    - $ { { if contains(parameters.entorno, 'STG') } }:
+      - job: Ejecucion_en_STG
+        steps:
+            - template: templateStg.yml 
+            - script: echo step two
