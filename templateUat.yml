@@ -13,7 +13,7 @@ steps:
   displayName: 'Run CMP_por_el_comercioMarca-TC/TD'
   continueOnError: true
   inputs:
-    script: 'newman run CMP/CMP_v1.postman_collection.json -d CMP/TD_DATAFORMAT_CMP_UAT_STG.csv 
+    script: 'newman run CMP/*.json -d CMP/TD_DATAFORMAT_CMP_UAT_STG.csv 
                                                            -e Entornos/GIRU_UAT_Environment.postman_environment.json 
                                                            --reporters cli,junit,htmlextra 
                                                            --reporter-junit-export Results/junitReport.xml 
