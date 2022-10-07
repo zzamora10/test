@@ -35,7 +35,7 @@ trigger: none
 
 steps:
 #checkout referenced repository
-  - checkout: test
+  - checkout: Test1
 #List SourcesDirectory files
   - task: Bash@3
     inputs:
