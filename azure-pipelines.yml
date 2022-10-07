@@ -9,7 +9,6 @@ parameters:
             - STG 
     - name: iteraciones
       type: number
-      default: 2
       values:
             - 1 
             - 2 
@@ -76,6 +75,7 @@ jobs:
               parameters:
                 it: ${{ parameters.iteraciones }}
                 dat: ${{ parameters.data }}
+                tip: ${{ parameters.tipologia }}
             - script: echo step one 
 
 
