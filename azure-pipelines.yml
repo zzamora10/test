@@ -3,7 +3,11 @@ resources:
   - repository: Test Runner
     type: git
     name: GiruBack/Test Runner
-    ref: main
+    ref: main/CPM
+
+variables:
+- name: lista
+  value: OOO 
 
 parameters:
 - name: entorno
