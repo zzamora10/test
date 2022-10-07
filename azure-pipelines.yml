@@ -64,8 +64,6 @@ parameters:
             - Solicitud de anulación de seguro
             - Transacción mal o no procesada
             - Traslado de saldo acreedor
-variables:
-- name: num_ejecucion
 
 
 jobs:
