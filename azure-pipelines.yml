@@ -27,7 +27,7 @@ parameters:
 - name: tipo
   type: string
   values:  
-  - '$(Build.SourcesDirectory)'
+  - $(Build.SourcesDirectory)
 
 trigger: none
 
