@@ -23,8 +23,6 @@ parameters:
             - CU 
             - TC 
             - TD
-it: ${{ parameters.iteraciones }}
-dat: ${{ parameters.data }}
 
 
 pool:
@@ -37,6 +35,7 @@ jobs:
             - template: templateUat.yml 
               parameters:
                 it: ${{ parameters.iteraciones }}
+                dat: ${{ parameters.data }}
             - script: echo step one 
             
     - ${{ if contains(parameters.entorno, 'STG') }}:
@@ -45,6 +44,7 @@ jobs:
             - template: templateStg.yml 
               parameters:
                 it: ${{ parameters.iteraciones }}
+                dat: ${{ parameters.data }}
             - script: echo step two
 
 
