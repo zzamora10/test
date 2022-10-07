@@ -1,8 +1,8 @@
+steps:
 - ${{ if contains(parameters.it, 'Full') }}:
   - script: |
       echo "triggerrrrrrrrrrrrrr"
 
-steps:
 - task: CmdLine@2
   displayName: 'Install Newman-Reporter-htmlextra'
   inputs:
