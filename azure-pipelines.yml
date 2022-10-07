@@ -45,7 +45,10 @@ trigger: none
 jobs: 
 - job: Install Newman-Reporter-htmlextra
   steps: 
-  - script: 'sudo npm install -g newman-reporter-htmlextra'
+  - task: CmdLine@2
+  displayName: 'Install Newman-Reporter-htmlextra'
+  inputs:
+    script: 'sudo npm install -g newman-reporter-htmlextra'
 
 
 - ${{ if contains(parameters.entornos, 'UAT') }}:
