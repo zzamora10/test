@@ -65,6 +65,8 @@ parameters:
             - Transacción mal o no procesada
             - Traslado de saldo acreedor
 
+variables:
+- name: num_it
 
 jobs:
       - job: Ejecucion_en_${{ parameters.entorno }}
