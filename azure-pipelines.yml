@@ -45,14 +45,13 @@ trigger: none
 pool:
   vmImage: ubuntu-latest
 
-jobs: 
-- job: Install Newman-Reporter-htmlextra
-  steps: 
+    steps: 
   - task: CmdLine@2
   displayName: 'Install Newman-Reporter-htmlextra'
   inputs:
     script: 'sudo npm install -g newman-reporter-htmlextra'
 
+jobs: 
 - ${{ if contains(parameters.entorno, 'UAT') }}:
   - job: Ruta 1
     steps:
