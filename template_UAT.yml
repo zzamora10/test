@@ -1,10 +1,12 @@
-steps:
 parameters: 
+    - name: num_ejecucion
+      type: string
   ${{ if contains(parameters.it, 'Full') }}:
-      num_ejecucion: ''
+      values: ''
   ${{ else }}:
-      num_ejecucion: ${{ parameters.it }}
+      values: ${{ parameters.it }}
 
+steps:
 - task: CmdLine@2
   displayName: 'Install Newman-Reporter-htmlextra'
   inputs:
