@@ -25,9 +25,9 @@ parameters:
   - 4
   - 5
 - name: tipo
-  type: string
+  type: number
   values:  
-  -  $TOOLS_REF
+  -  echo "$TOOLS_REF"
 
 trigger: none
 
