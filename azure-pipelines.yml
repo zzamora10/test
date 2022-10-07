@@ -2,8 +2,8 @@ resources:
   repositories:
   - repository: Test Runner
     type: git
-    name: GiruBack/Test Runner
-    ref: main/CPM
+    name: GiruBack/Test Runner/CPM
+    ref: main
 
 variables:
 - name: lista
