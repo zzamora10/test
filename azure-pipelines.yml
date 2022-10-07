@@ -28,9 +28,6 @@ parameters:
 trigger: none
 
 
-
-jobs: 
--job: ReadFile
 steps:
 #checkout referenced repository
   - checkout: test
@@ -39,16 +36,3 @@ steps:
     inputs:
       targetType: 'inline'
       script: 'ls ''$(Build.SourcesDirectory)'''
-      
-- ${{ if contains(parameters.entorno, 'UAT') }}:
-  - job: Ruta1
-    steps:
-    - script: echo Building ${{ parameters.entorno }}...${{ parameters.iteraciones }}
-- ${{ if contains(parameters.entorno, 'STG') }}:
-  - job: Ruta2
-    steps:
-    - script: echo Building ${{ parameters.entorno }}...${{ parameters.iteraciones }}
-- ${{ if contains(parameters.entorno, ' ') }}:
-  - job: Ruta3
-    steps:
-    - script: echo Nada...
