@@ -8,7 +8,7 @@ parameters:
             - UAT 
             - STG 
     - name: iteraciones
-      type: number
+      type: string
       values:
             - Todo
             - 1 
